@@ -9,7 +9,7 @@ app.use(cors())
 app.use(express.json())
 
 
-const uri = "mongodb+srv://shariaprema123:rP0VER5opewIfqoDo@cluster0.wttgumh.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://shariaprema123:wQlP9pQCTMdhKId4@cluster0.wttgumh.mongodb.net/?retryWrites=true&w=majority";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -23,6 +23,22 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
+
+    const productCollection = client.db("productDB").collection("products");
+
+    //POST
+    app.post("/products", async (req, res) => {
+      const product = req.body;
+      console.log('Product',product);
+      const result = await productCollection.insertOne(product);
+      console.log(result);
+      res.send(result);
+    });
+    
+
+
+
+
 
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
