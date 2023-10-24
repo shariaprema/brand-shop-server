@@ -50,7 +50,6 @@ async function run() {
       res.send(result);
     });
 
-//-----------------------------------------------------------------
     //GET :Display all products
 
     app.get("/products", async (req, res) => {
@@ -71,8 +70,7 @@ async function run() {
 
 
 
-    // individual products ID:
-
+ 
     app.get("/users/:id", async (req, res) => {
       const id = req.params.id;
       console.log("id", id);
@@ -80,13 +78,36 @@ async function run() {
         _id: new ObjectId(id),
       };
       const result = await productCollection.findOne(query);
-      console.log('--->',result);
+      res.send(result);
+    });
+
+    // individual products ID for
+    // UPDATE Cart Operation
+
+    app.put("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const data = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedUSer = {
+        $set: {
+             name: data.name,
+            image:data.image,
+            brand:data.brand,
+            type:data.type,
+            price:data.price,
+            rating:data.rating
+        },
+      };
+      const result = await productCollection.updateOne(
+        filter,
+        updatedUSer,
+        options
+      );
       res.send(result);
     });
 
 
-
-//-------------------------------------------------
 
 
     //GET :Display all brands
@@ -110,7 +131,6 @@ async function run() {
       res.send(result);
     });
 
-
     app.get("/brands/:id", async (req, res) => {
       const id = req.params.id;
       const query = {
@@ -133,12 +153,13 @@ app.get("/cart", async (req, res) => {
 // DELETE cart Operation
 app.delete("/cart/:id", async(req, res)=>{
   const id = req.params.id;
-  const query = {_id: new ObjectId(id)}
-  const result = await cardCollection.deleteOne(query)
-})
+  const query = {_id: new ObjectId(id),};
+  const result = await cardCollection.deleteOne(query);
+  res.send(result);
+});
 
 
-//-------------------------------------------------
+
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
