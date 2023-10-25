@@ -9,12 +9,10 @@ const port = process.env.PORT || 5001;
 app.use(cors())
 app.use(express.json())
 
-// const uri = "mongodb://localhost:27017"
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.wttgumh.mongodb.net/?retryWrites=true&w=majority`;
 console.log(uri);
 
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -64,7 +62,6 @@ async function run() {
       const query = { brandName: (brandName)};
       const cursor = productCollection.find(query)
       const result = await cursor.toArray();
-      console.log('check-------->',result);
       res.send(result);
     });
 
@@ -81,8 +78,7 @@ async function run() {
       res.send(result);
     });
 
-    // individual products ID for
-    // UPDATE Cart Operation
+ 
 
     app.put("/users/:id", async (req, res) => {
       const id = req.params.id;
@@ -141,7 +137,6 @@ async function run() {
       res.send(result);
     });
 
-//-----------------------------------------------------
 //GET for Cart 
 app.get("/cart", async (req, res) => {
   const cursor = cardCollection.find()
@@ -149,7 +144,6 @@ app.get("/cart", async (req, res) => {
   res.send(carts);
 });
 
-//---------------------------------------
 // DELETE cart Operation
 app.delete("/cart/:id", async(req, res)=>{
   const id = req.params.id;
@@ -163,8 +157,7 @@ app.delete("/cart/:id", async(req, res)=>{
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
-    // Ensures that the client will close when you finish/error
-    // await client.close();
+ 
   }
 }
 run().catch(console.dir);
